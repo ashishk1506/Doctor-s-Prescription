@@ -1,15 +1,26 @@
 const btn = document.querySelector('.talk')
 let content = document.querySelector('.content')
-let p
+let p = null
 let parent
 let checkbox
 let label
+let n = false
+let ex = false
+
+//display time
+let today = new Date()
+let date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate()
+let time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds()
+let dateTime = date+' '+time;
+document.querySelector('.time').textContent = dateTime
 
 const keyStrokes = ['name','symptoms', 'diagnosis','prescription','advice']
 let keyStrokesStatus = false
 const commands = ['first','second','third','fourth','fifth']
 let commandStatus = false
-const editCommands = ['delete name','delete symptoms','delete diagnosis','delete prescription','delete advice']
+const deleteCommands = ['delete name','delete symptoms','delete diagnosis','delete prescription','delete advice']
+const editCommands = ['add name','addsymptoms','add diagnosis','add prescription','add advice']
+
 const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition 
 const recognition = new SpeechRecognition();
 
@@ -19,8 +30,11 @@ recognition.continuous = true
 recognition.onstart = function(){
     console.log("voice command activated")
 }
-let n = false
-btn.addEventListener('click',(e)=>{
+
+btn.addEventListener('click',()=>{
+ if(ex === true){
+     stopEdit()
+ }
  if(!n)
 {
     recognition.start()
@@ -30,15 +44,10 @@ btn.addEventListener('click',(e)=>{
 }
  else
  {
-    recognition.addEventListener('end',(e)=>{
-        console.log("listener removed")
-    })
-    recognition.removeEventListener('result',writeMode)
-    recognition.stop()
-    console.log("ended")
-    n = false
+    stopWrite()
 }
 })
+
      function writeModeEnable(){
         recognition.addEventListener('result',writeMode) 
      }
@@ -50,16 +59,8 @@ btn.addEventListener('click',(e)=>{
             console.log(transcript)
             for(let j of keyStrokes){
                 if(j === transcript.toLowerCase().trim()){
-                   //  p = document.createElement('p')
-                   // content.appendChild(p)
-                   // if(keyStrokesStatus)
-                   //  {
-                   //      console.log("inverteed")
-                   //      parent.classList.add('tail')
-                   //  }
-           
                    p = document.querySelector(`.${j}`)
-                   
+                   console.log(p.parentElement.querySelector('label'))
                    keyStrokesStatus = true
                    commandStatus = false
                    transcript = ''
@@ -96,83 +97,59 @@ btn.addEventListener('click',(e)=>{
                 //    parent.classList.add('head')
                }
      }      
-
-
-// recognition.addEventListener('end',()=>{
-//     console.log("eneded")
-// })
-
-// let b = false
-// document.querySelector('#name').addEventListener('click',()=>{
-//     if(!b)
-// {
-//     recognition.start()
-//     console.log("starte")
-//     b = true
-// }
-//  else
-//  {
-//     recognition.addEventListener('end',(e)=>{
-//         console.log("listener removed")
-//     })
-//     recognition.removeEventListener('result',editContent)
-//     recognition.stop()
-//     console.log("ended")
-//     b = false
-// }})
-
-// editContent = function(){
-//     let current = e.resultIndex
-//     let transcript = e.results[current][0].transcript
-//     console.log(transcript)
-// }
-// let editButton = false
-// for(let x of keyStrokes){
-//    let p =  document.querySelector(`#${x}`)
-//    p.addEventListener('click',(e)=>{
-//        if(!editButton)
-//         {
-//             recognition.start()
-//             startEditListner(`#${x}`)
-//             console.log("edit recognition started")
-//             editButton = true
-//         }
-//         else
-//         {
-//             recognition.removeEventListener('result',editContent)
-//             recognition.stop()
-//             editButton = false
-//         }
-//    })
-// }
-// function startEditListner(n){
-//   recognition.addEventListener('result',editContent)
-// }
-// function editContent(e){
-//     let current = e.resultIndex
-//     let transcript = e.results[current][0].transcript
-//     console.log(transcript)
-// }
+    function stopWrite(){
+        recognition.addEventListener('end',()=>{
+            console.log("listener removed")
+        })
+        recognition.removeEventListener('result',writeMode)
+        recognition.stop()
+        console.log("ended")
+        n = false
+    }
 
 const editButton = document.querySelector('.edit')
-let e = false
-editButton.addEventListener('click',()=>{
- if(!e){
+
+editButton.addEventListener('click',(e)=>{
+ if(n === true){
+    stopWrite()
+ }
+ if(!ex){
      recognition.start()
      editModeEnable()
-     console.log("edit mode initiated")
+     ex= true
  }
  else{
-     recognition.removeEventListener('result',editMode)
-     recognition.stop()
-     console.log("edit mode stopped")
+    stopEdit()
  }
 })
-function editModeEnable(){
-    recognition.addEventListener('result',editMode)
-}
-function editMode(e){
-    let current = e.resultIndex
+    function editModeEnable(){
+        recognition.addEventListener('result',editMode)
+    }
+    function editMode(e){
+    
+            let current = e.resultIndex
             let transcript = e.results[current][0].transcript
-            console.log(transcript)
-}
+            for(let j of deleteCommands){
+                if(j === transcript.toLowerCase().trim()){
+              
+                   p = document.querySelector(`.${j.split(" ")[1]}`)
+                   p.textContent = " "
+                   p.parentElement.querySelector('section').innerHTML = ""
+                   console.log(p)
+                   transcript = ''
+                }
+            }
+            if(p!=null)
+            p.textContent = p.textContent + transcript
+    }
+    function stopEdit(){
+        recognition.addEventListener('end',()=>{
+            console.log("listener removed")
+         })
+         recognition.removeEventListener('result',editMode)
+         recognition.stop()
+         console.log("edit mode stopped")
+         ex = false
+    }
+
+

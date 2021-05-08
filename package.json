@@ -18,6 +18,8 @@
   "homepage": "https://github.com/ashishk1506/Hackathon_ojass#readme",
   "dependencies": {
     "ejs": "^3.1.6",
-    "express": "^4.17.1"
+    "express": "^4.17.1",
+    "express-pdf": "^1.2.2",
+    "nodemailer": "^6.6.0"
   }
 }
