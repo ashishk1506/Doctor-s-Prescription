@@ -1,18 +1,32 @@
+body
+{
+   height: 87vh;
+    background:linear-gradient(rgba(16, 156, 156, 0.2),rgba(7, 6, 6, 0.2)) ;
+}
+
+.container
+{
+    margin: 2rem 0;
+    background-color: white;
+    box-shadow: 5px 5px 15px -5px rgba(0, 0, 0, 0.3);
+}
+
 .cont2
 {
-    position: absolute;
-    top: 20%;
-    left: 10%;
-    
+   
+    margin-left: auto;
+    margin-right: auto;
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+    border: black solid;
 
 }
-.cont3
+
+.Next-button
 {
-    position: absolute;
-    top: 10%;
-    left: 60%;
+    margin-top: 1.8rem;
+    text-align: center;
 }
-
 .button
 {
     background-color: #00adb5;
@@ -32,6 +46,57 @@
     transition: all 0.3s;
 }
 
+
+label
+{
+    font-weight: bold;
+}
+
+.colu
+{
+    padding-left: 2rem;
+    padding-right: 2rem;
+}
+
+
+
+@media only screen and (min-width: 990px)
+{
+    .cont2
+    {
+        margin-top: 6rem;
+    }
+    .cont3
+    {
+        margin-top: 2rem;
+    }
+}
+
+@media only screen and (max-width: 768px)
+{
+    body
+    {
+        height: 120vh;
+    }
+    .cont2
+    {
+        
+        margin-left: auto;
+        margin-right: auto;
+        
+    }
+}
+
 @media only screen and (max-width: 575px)
 {
+    body
+    {
+        height: 145vh;
+    }
+
+    .colu
+    {
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
 }
