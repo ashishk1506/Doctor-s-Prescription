@@ -1,0 +1,37 @@
+.cont2
+{
+    position: absolute;
+    top: 20%;
+    left: 10%;
+    
+
+}
+.cont3
+{
+    position: absolute;
+    top: 10%;
+    left: 60%;
+}
+
+.button
+{
+    background-color: #00adb5;
+    color: white;
+    border: solid #00adb5;
+    transition: all 0.3s;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    font-weight: bold;
+}
+
+.button:hover
+{
+    background-color: white;
+    color: #067e85;
+    border: solid #067e85;
+    transition: all 0.3s;
+}
+
+@media only screen and (max-width: 575px)
+{
+}
