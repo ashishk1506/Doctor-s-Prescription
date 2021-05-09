@@ -26,8 +26,8 @@ app.get('/',(req,res)=>{
 app.post('/prescription/',(req,res)=>{
  data = req.body
  try{
-    dbConn.query("INSERT INTO patient (pName,pNumber,pEmail,dName) VALUES (?,?,?,?)",
-    [data.patient_name, data.patient_phone, data.patient_email, data.doctor_name],(err,result)=>{
+    dbConn.query("INSERT INTO patient (pName,pNumber,pEmail,dName,link) VALUES (?,?,?,?,?)",
+    [data.patient_name, data.patient_phone, data.patient_email, data.doctor_name, ''],(err,result)=>{
     if(err)
     console.log(err)
     else{
@@ -44,21 +44,21 @@ app.use('/pdfFromHTML/:id', function(req, res){
    console.log(req.body)
    let id = req.params.id
    let url = req.protocol+"://"+req.headers.host+"/"+'pdfFromHTML'+"/"+id+'?'
-   let documentDef = {
-     content :[
-       `${req.body}`
-     ]
-   }
-   const pdfDoc = pdfMake.createPdf(documentDef)
-   pdfDoc.getBase64((data)=>{
-     res.writeHead(200,
-      {
-         'Content-Type':'application/pdf',
-         'Content-Disposition':"attachmnet;filename-'filename.pdf'"
-      })
-      const download = Buffer.from(data.toString('utf-8'),'base-64')
-      res.end(download)
-   })
+  //  let documentDef = {
+  //    content :[
+  //      `${req.body}`
+  //    ]
+  //  }
+  //  const pdfDoc = pdfMake.createPdf(documentDef)
+  //  pdfDoc.getBase64((data)=>{
+  //    res.writeHead(200,
+  //     {
+  //        'Content-Type':'application/pdf',
+  //        'Content-Disposition':"attachmnet;filename-'filename.pdf'"
+  //     })
+  //     const download = Buffer.from(data.toString('utf-8'),'base-64')
+  //     res.end(download)
+  //  })
 //   try{
 //     dbConn.query(`UPDATE patient SET link = '${url}' WHERE pNumber = ${id}`,(err,result)=>{
 //     if(err)
@@ -76,7 +76,22 @@ app.use('/pdfFromHTML/:id', function(req, res){
   
 })
 
+app.get('/panelist/:dName',(req,res)=>{
+  let data = null
+  try{
+    dbConn.query(`SELECT * FROM patient WHERE dName = '${req.params.dName}'`,(err,result)=>{
+    if(err)
+    console.log(err)
+    else{
+      console.log("done",result)
+      res.render('panelist',{result})
+    }
+ })}
+ catch(e){
+   console.log(e)
+ }
 
+})
 
 app.listen(PORT,()=>{
     console.log("listening to port 3000")

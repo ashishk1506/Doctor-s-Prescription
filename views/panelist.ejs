@@ -44,7 +44,9 @@
                 <h1 class="display-4">Patients</h1>
             </div>
         </div>
+       
         <div class="container cont4">
+            <h2> Dr. <%= result[0].dName %></h2>
             <table class="table table-striped table-hover">
                 <thead>
                   <tr>
@@ -54,12 +56,15 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <tr>
-                    
-                    <td><%= patients.PName %></td>
-                    <td> <%= patients.PPhone %></td>
-                    <td><%= patients.Ppdf %></td>
-                  </tr>
+                  
+                    <% result.forEach((res)=>{ %>
+                        <tr>
+                            <td> <%= res.pName %></td>
+                            <td> <%= res.pNumber %></td>
+                            <td> <%= res.link %></td>
+                        </tr>
+                    <% }) %>
+                  
                  
                 </tbody>
               </table>
