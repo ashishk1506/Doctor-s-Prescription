@@ -7,7 +7,7 @@ const pdfMake = require('pdfmake')
 const mailer = require('./module/mailer')
 const dbConn = require('./config/dbConfig')
 const host = '0.0.0.0'
-const PORT = 3000 || process.env.PORT
+const PORT = process.env.PORT
 
 const _ = require("lodash")
 const user = require('./db/user')
