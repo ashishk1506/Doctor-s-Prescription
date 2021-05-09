@@ -3,11 +3,15 @@ const app = express()
 const path = require('path')
 const cors = require('cors')
 require('dotenv').config()
-const pdfMake = require('pdfmake')
 const mailer = require('./module/mailer')
 const dbConn = require('./config/dbConfig')
+const pdf = require("pdf-creator-node");
 const host = '0.0.0.0'
 const PORT = process.env.PORT
+
+const puppeteer = require('puppeteer');
+const handlebars = require("handlebars");
+const fs = require("fs");
 
 const _ = require("lodash")
 const user = require('./db/user')
@@ -41,25 +45,60 @@ app.post('/prescription/',(req,res)=>{
  res.render('prescription',{ data })
 })
 
-app.use('/pdfFromHTML/:id', function(req, res){
+app.use('/pdfFromHTML/:id', async function(req, res){
+
    console.log(req.body)
    let id = req.params.id
    let url = req.protocol+"://"+req.headers.host+"/"+'pdfFromHTML'+"/"+id+'?'
-  //  let documentDef = {
-  //    content :[
-  //      `${req.body}`
-  //    ]
-  //  }
-  //  const pdfDoc = pdfMake.createPdf(documentDef)
-  //  pdfDoc.getBase64((data)=>{
-  //    res.writeHead(200,
-  //     {
-  //        'Content-Type':'application/pdf',
-  //        'Content-Disposition':"attachmnet;filename-'filename.pdf'"
-  //     })
-  //     const download = Buffer.from(data.toString('utf-8'),'base-64')
-  //     res.end(download)
-  //  })
+
+   let html = fs.readFileSync("template.html", "utf8");
+   var options = {
+    format: "A3",
+    orientation: "portrait",
+    border: "10mm",
+    header: {
+        height: "45mm",
+        contents: '<div style="text-align: center;">Doctor Prescription</div>'
+    },
+    footer: {
+        height: "28mm",
+        contents: {
+            first: 'Cover page',
+            default: '<span style="color: #444;">{{page}}</span>/<span>{{pages}}</span>', // fallback value
+            last: 'Last Page'
+        }
+    }
+};
+var users = [
+  {
+    name: "Shyam",
+    age: "26",
+  },
+  {
+    name: "Navjot",
+    age: "26",
+  },
+  {
+    name: "Vitthal",
+    age: "26",
+  },
+];
+var document = {
+  html: html,
+  data: {
+    users: users,
+  },
+  path: "./output.pdf",
+  type: "",
+};
+pdf.create(document, options)
+  .then((res) => {
+    console.log(res);
+  })
+  .catch((error) => {
+    console.error(error);
+  });
+
 //   try{
 //     dbConn.query(`UPDATE patient SET link = '${url}' WHERE pNumber = ${id}`,(err,result)=>{
 //     if(err)
@@ -71,7 +110,7 @@ app.use('/pdfFromHTML/:id', function(req, res){
 //  catch(e){
 //    console.log(e)
 //  }
-  user.addValues()
+//   user.addValues()
   // mailer(url.toString())
   // console.log(data)
   
@@ -94,6 +133,6 @@ app.get('/panelist/:dName',(req,res)=>{
 
 })
 
-app.listen(PORT,host,()=>{
+app.listen(3000,host,()=>{
     console.log("listening to port 3000")
 })
