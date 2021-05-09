@@ -19,7 +19,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Fascinate&display=swap" rel="stylesheet">
 
     <link rel="stylesheet" href="/css/prescription.css">
-
+   
     <title>Prescription</title>
 </head>
 <body>
@@ -29,98 +29,119 @@
           <h1>Prescription</h1>
         </div>
     </div>
- 
-    <div class="container cont1 border">
 
-      <button class="btn btn-success talk"><i class="fas fa-microphone float-right btn" ></i></button>
-      <button class="btn btn-warning edit"><i class="fas fa-microphone float-right btn" ></i></button>
-      <form>
-          <div class="details">
-              <hr>
-                <div class="row">
-                    <div class="col-lg-6 col-md-6 col-6">
-                        <h5 class="doctor">Dr.<%= data.doctor_name %></h5>
-                        <h6>Speciality : <span><%= data.doctor_speciality%></span></h6>
-                        <h6>Date&Time : <span class="time"></span></h6>
-                    </div>
-                    <div class="col-lg-6 col-md-6 col-6 patient">
-                        <div class="ico">
-                          <label for="exampleFormControlTextarea1">Name</label>
-                          <textarea class="name"></textarea>
-                          <section>
-                            
-                          </section>
-                        </div> 
-                    </div>
-                  </div>
-                <hr>
+<div id="instruct" class="overlay">
+  <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+  <div class="overlay-content">
+    <h1 style="text-align: center; margin-bottom: 2rem;">Instructions</h1>
+    <div class="instructions">
+      <ul>
+        <li>Click on the Mic icon to speak.</li>
+        <li>Use keywords (like Name, Symptons, Prescription,etc.) to enter data to a specific field.</li>
+      </ul>
+      
+      <a href="" style="margin-top: 2rem;" class=" btn btn-light">  <i class="fas fa-microphone"></i> TRY</a>
+      <div class="form-group">              
+        <textarea class="form-control"  rows="2"></textarea>
+      </div>
+  </div>
+  
+  </div>
+</div>
 
-            </div>
+<span style="font-size:30px;cursor:pointer" onclick="openNav()">&#x3F;</span>
+
+      
+    <a href="#" class="flo talk">
+      <i class="fas fa-microphone my-float" ></i>
+    </a>
+    </div>
+
+    <form method="POST" action='/pdfFromHTML/<%=data.patient_phone%>'>
+    <div class="container cont1 border border-dark">
+     
+      <div class="details">
+         
+          <div class="row">
+              <div class="col-lg-6 col-md-6 col-6">
+                <h5 class="doctor">Dr.<%= data.doctor_name %></h5>
+                <h6>Speciality : <%= data.doctor_speciality %></h6>
+                <h6>Date&Time : <small class="time"></small></h6>
+              </div>
+              <div class="col-lg-6 col-md-6 col-6 patient">
+                <label >Name</label>
+                <textarea class="name"></textarea>
+                <section>
+
+                </section>
+              </div>
+          </div>
+
+          <hr style="color: black;">
+
+      </div>
+
+       
             
             <div class="form-group">
-              
               <div class="ico">
-                <label for="exampleFormControlTextarea1">Symptoms</label>
-            
+                <label >Symptoms</label>
                 <a href=""><i class="fas fa-edit float-right btn"></i></a>
               </div> 
-
-              <textarea class="form-control symptoms"  rows="2"></textarea>
+              <textarea class="form-control symptoms" rows="1" name="symptoms"></textarea>
               <section>
-
               </section>
             </div>
 
             <div class="form-group">
-               
                 <div class="ico">
-                  <label for="exampleFormControlTextarea1">Diagnosis</label>
-        
+                  <label >Diagnosis</label>
                     <a href=""><i class="fas fa-edit float-right btn"></i></a>
                   </div> 
-
-                <textarea class="form-control diagnosis"  rows="2"></textarea>
-                <section>
-
-                </section>
+                <textarea class="form-control diagnosis" name="diagnosis" rows="1"></textarea>
+                <section></section>
               </div>
 
               <div class="form-group">
-                
                 <div class="ico">
-                    <label for="exampleFormControlTextarea1">Prescription</label>
-                   
+                    <label>Prescription</label>
                     <a href=""><i class="fas fa-edit float-right btn"></i></a>
                   </div> 
-
-                <textarea class="form-control prescription"  rows="2"></textarea>
-                <section>
-
-                </section>
+                <textarea class="form-control prescription" name="prescription" rows="1"></textarea>
+                <section></section>
               </div>
 
               <div class="form-group">
-                
                 <div class="ico">
-                   <label for="exampleFormControlTextarea1">Advice</label>
-                 
-                   <a href=""><i class="fas fa-edit float-right btn"></i></a>
+                   <label >Advice</label>
+                    <a href=""><i class="fas fa-edit float-right btn"></i></a>
                   </div> 
-                <textarea class="form-control advice"  rows="2"></textarea>
-                <section>
-
-                </section>
+                <textarea class="form-control advice" name="advice" rows="1"></textarea>
+                <section></section>
               </div>
 
-          </form>
-          <form method="get" action='/pdfFromHTML/<%=data.patient_phone%>'>
-            <button type="submit">generate pdf</button>
-          </form>
+        <!-- <div class="sending-button">
+          <a type="submit" class="btn button">SEND</a>
+        </div> -->
+        <button type="submit">submit</button>
     </div>
-  
+  </form>
+
     <div class="container-fluid foot">
-
     </div>
-<script src ='/js/app.js'></script>
+
 </body>
+<script>
+  function openNav() {
+    document.getElementById("instruct").style.width = "100%";
+  }
+  
+  function closeNav() {
+    document.getElementById("instruct").style.width = "0%";
+  }
+  document.querySelector('form').addEventListener('submit',()=>{
+    console.log("hi")
+  })
+  </script>
+  <script src ='/js/app.js'></script>
 </html>

@@ -5,7 +5,6 @@ let parent
 let checkbox
 let label
 let n = false
-let ex = false
 
 //display time
 let today = new Date()
@@ -19,7 +18,7 @@ let keyStrokesStatus = false
 const commands = ['first','second','third','fourth','fifth']
 let commandStatus = false
 const deleteCommands = ['delete name','delete symptoms','delete diagnosis','delete prescription','delete advice']
-const editCommands = ['add name','addsymptoms','add diagnosis','add prescription','add advice']
+const editCommands = ['add name','add symptoms','add diagnosis','add prescription','add advice']
 
 const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition 
 const recognition = new SpeechRecognition();
@@ -31,22 +30,23 @@ recognition.onstart = function(){
     console.log("voice command activated")
 }
 
-btn.addEventListener('click',()=>{
- if(ex === true){
-     stopEdit()
- }
- if(!n)
-{
-    recognition.start()
-    writeModeEnable()
-    console.log("started")
-    n = true
-}
- else
- {
-    stopWrite()
-}
-})
+btn.addEventListener('click',writeHandler)
+    function writeHandler(){
+
+            if(!n)
+           {
+               n  = true
+               recognition.start()
+               writeModeEnable()
+               console.log("started")
+           }
+            else
+            {
+               n = false
+               stopWrite()
+               p = null
+           }
+    }
 
      function writeModeEnable(){
         recognition.addEventListener('result',writeMode) 
@@ -57,12 +57,31 @@ btn.addEventListener('click',()=>{
             let current = e.resultIndex
             let transcript = e.results[current][0].transcript
             console.log(transcript)
+            if(transcript.toLowerCase().trim() === 'stop'){
+                stopWrite()
+                return
+            }
             for(let j of keyStrokes){
                 if(j === transcript.toLowerCase().trim()){
+                   if(p!=null)
+                     p.parentElement.querySelector('label').style.color = 'black'
                    p = document.querySelector(`.${j}`)
-                   console.log(p.parentElement.querySelector('label'))
+                   p.parentElement.querySelector('label').style.color = 'green'
                    keyStrokesStatus = true
                    commandStatus = false
+                   transcript = ''
+                }
+            }
+            for(let j of deleteCommands){
+                if(j === transcript.toLowerCase().trim()){
+                   if(p!=null)
+                    p.style.color = 'black'
+                   p = document.querySelector(`.${j.split(" ")[1]}`)
+                   p.style.color = 'red'
+                   p.style.color = 'red'
+                   p.textContent = " "
+                   p.parentElement.querySelector('section').innerHTML = ""
+                   console.log(p)
                    transcript = ''
                 }
             }
@@ -94,62 +113,66 @@ btn.addEventListener('click',()=>{
                {
                    p.textContent = p.textContent + transcript
                    parent = p.parentElement.querySelector('h4')
-                //    parent.classList.add('head')
                }
      }      
     function stopWrite(){
+
         recognition.addEventListener('end',()=>{
             console.log("listener removed")
         })
         recognition.removeEventListener('result',writeMode)
         recognition.stop()
         console.log("ended")
-        n = false
     }
 
-const editButton = document.querySelector('.edit')
+//editing
+// const editButton = document.querySelector('.edit')
 
-editButton.addEventListener('click',(e)=>{
- if(n === true){
-    stopWrite()
- }
- if(!ex){
-     recognition.start()
-     editModeEnable()
-     ex= true
- }
- else{
-    stopEdit()
- }
-})
-    function editModeEnable(){
-        recognition.addEventListener('result',editMode)
-    }
-    function editMode(e){
+// editButton.addEventListener('click',editHandler)
+//     function editHandler(){
+        
+//             if(!ex){
+//                 recognition.start()
+//                 editModeEnable()
+//                 ex= true
+//             }
+//             else{
+//                stopEdit()
+//                p = null
+//             }
+//     }
+//     function editModeEnable(){
+//         recognition.addEventListener('result',editMode)
+//     }
+//     function editMode(e){
     
-            let current = e.resultIndex
-            let transcript = e.results[current][0].transcript
-            for(let j of deleteCommands){
-                if(j === transcript.toLowerCase().trim()){
-              
-                   p = document.querySelector(`.${j.split(" ")[1]}`)
-                   p.textContent = " "
-                   p.parentElement.querySelector('section').innerHTML = ""
-                   console.log(p)
-                   transcript = ''
-                }
-            }
-            if(p!=null)
-            p.textContent = p.textContent + transcript
-    }
-    function stopEdit(){
-        recognition.addEventListener('end',()=>{
-            console.log("listener removed")
-         })
-         recognition.removeEventListener('result',editMode)
-         recognition.stop()
-         console.log("edit mode stopped")
-         ex = false
-    }
+//             let current = e.resultIndex
+//             let transcript = e.results[current][0].transcript
+//             for(let j of deleteCommands){
+//                 if(j === transcript.toLowerCase().trim()){
+//                    if(p!=null)
+//                     p.style.color = 'black'
+//                    p = document.querySelector(`.${j.split(" ")[1]}`)
+//                    p.style.color = 'red'
+//                    p.style.color = 'red'
+//                    p.textContent = " "
+//                    p.parentElement.querySelector('section').innerHTML = ""
+//                    console.log(p)
+//                    transcript = ''
+//                 }
+//             }
+//             if(p!=null)
+//             p.textContent = p.textContent + transcript
+//     }
+//     function stopEdit(){
+ 
+//         recognition.addEventListener('end',()=>{
+//             console.log("listener removed")
+//          })
+//          recognition.removeEventListener('result',editMode)
+//          recognition.stop()
+//          console.log("edit mode stopped")
+        
+//     }
 
 
