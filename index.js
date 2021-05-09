@@ -6,6 +6,7 @@ require('dotenv').config()
 const pdfMake = require('pdfmake')
 const mailer = require('./module/mailer')
 const dbConn = require('./config/dbConfig')
+const host = '0.0.0.0'
 const PORT = 3000 || process.env.PORT
 
 const _ = require("lodash")
@@ -93,6 +94,6 @@ app.get('/panelist/:dName',(req,res)=>{
 
 })
 
-app.listen(PORT,()=>{
+app.listen(PORT,host,()=>{
     console.log("listening to port 3000")
 })
