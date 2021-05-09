@@ -32,7 +32,7 @@ app.post('/prescription/',(req,res)=>{
  data = req.body
  try{
     dbConn.query("INSERT INTO patient (pName,pNumber,pEmail,dName,link) VALUES (?,?,?,?,?)",
-    [data.patient_name, data.patient_phone, data.patient_email, data.doctor_name, ''],(err,result)=>{
+    [data.patient_name, parseInt(data.patient_phone), data.patient_email, data.doctor_name, ''],(err,result)=>{
     if(err)
     console.log(err)
     else{
@@ -52,7 +52,7 @@ app.use('/pdfFromHTML/:id', async function(req, res){
    let url = req.protocol+"://"+req.headers.host+"/"+'pdfFromHTML'+"/"+id+'?'
 
    let html = fs.readFileSync("template.html", "utf8");
-   var options = {
+   let options = {
     format: "A3",
     orientation: "portrait",
     border: "10mm",
@@ -69,26 +69,22 @@ app.use('/pdfFromHTML/:id', async function(req, res){
         }
     }
 };
-var users = [
+let users = [
   {
-    name: "Shyam",
-    age: "26",
-  },
-  {
-    name: "Navjot",
-    age: "26",
-  },
-  {
-    name: "Vitthal",
-    age: "26",
-  },
+      name : req.body.name,
+      symptoms: req.body.symptoms,
+      diagnosis: req.body.diagnosis, 
+      prescription: req.body.prescription,
+      advice: req.body.advice
+    
+  }
 ];
-var document = {
+let document = {
   html: html,
   data: {
     users: users,
   },
-  path: "./output.pdf",
+  path: `./${req.body.name}.pdf`,
   type: "",
 };
 pdf.create(document, options)
@@ -111,7 +107,7 @@ pdf.create(document, options)
 //    console.log(e)
 //  }
 //   user.addValues()
-  // mailer(url.toString())
+  mailer(url.toString())
   // console.log(data)
   
 })

@@ -18,7 +18,7 @@ let keyStrokesStatus = false
 const commands = ['first','second','third','fourth','fifth']
 let commandStatus = false
 const deleteCommands = ['delete name','delete symptoms','delete diagnosis','delete prescription','delete advice']
-const editCommands = ['add name','add symptoms','add diagnosis','add prescription','add advice']
+// const editCommands = ['add name','add symptoms','add diagnosis','add prescription','add advice']
 
 const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition 
 const recognition = new SpeechRecognition();
@@ -94,6 +94,7 @@ btn.addEventListener('click',writeHandler)
                    checkbox.setAttribute("type", "checkbox");
                    checkbox.id = j
                    checkbox.className = `${j}`
+                   checkbox.name = 
                    checkbox.checked = true
                    let br = document.createElement('br')
                    p.parentElement.querySelector('section').appendChild(br)

@@ -5,13 +5,17 @@
     <title>prescription</title>
   </head>
   <body>
-    <h1>p</h1>
+    
     <ul>
       {{#each users}}
-      <li>Name: {{this.name}}</li>
-      <li>Age: {{this.age}}</li>
+      <h1> {{this.name}}</h1>
+      <h3>symptoms </h3> <li> {{this.symptoms}}</li>
+      <h3>diagnosis </h3> <li> {{this.diagnosis}}</li>
+       <h3>prescription</h3> <li> {{this.prescription}}</li>
+      <h3>advice</h3> <li> {{this.advice}}</li>
       <br />
-      {{/each}}
+      {{/each}} 
+      
     </ul>
   </body>
 </html>
