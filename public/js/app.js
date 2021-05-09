@@ -94,7 +94,6 @@ btn.addEventListener('click',writeHandler)
                    checkbox.setAttribute("type", "checkbox");
                    checkbox.id = j
                    checkbox.className = `${j}`
-                   checkbox.name = 
                    checkbox.checked = true
                    let br = document.createElement('br')
                    p.parentElement.querySelector('section').appendChild(br)
