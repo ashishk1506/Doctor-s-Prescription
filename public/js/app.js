@@ -78,7 +78,6 @@ btn.addEventListener('click',writeHandler)
                     p.style.color = 'black'
                    p = document.querySelector(`.${j.split(" ")[1]}`)
                    p.style.color = 'red'
-                   p.style.color = 'red'
                    p.textContent = " "
                    p.parentElement.querySelector('section').innerHTML = ""
                    console.log(p)
@@ -124,55 +123,3 @@ btn.addEventListener('click',writeHandler)
         recognition.stop()
         console.log("ended")
     }
-
-//editing
-// const editButton = document.querySelector('.edit')
-
-// editButton.addEventListener('click',editHandler)
-//     function editHandler(){
-        
-//             if(!ex){
-//                 recognition.start()
-//                 editModeEnable()
-//                 ex= true
-//             }
-//             else{
-//                stopEdit()
-//                p = null
-//             }
-//     }
-//     function editModeEnable(){
-//         recognition.addEventListener('result',editMode)
-//     }
-//     function editMode(e){
-    
-//             let current = e.resultIndex
-//             let transcript = e.results[current][0].transcript
-//             for(let j of deleteCommands){
-//                 if(j === transcript.toLowerCase().trim()){
-//                    if(p!=null)
-//                     p.style.color = 'black'
-//                    p = document.querySelector(`.${j.split(" ")[1]}`)
-//                    p.style.color = 'red'
-//                    p.style.color = 'red'
-//                    p.textContent = " "
-//                    p.parentElement.querySelector('section').innerHTML = ""
-//                    console.log(p)
-//                    transcript = ''
-//                 }
-//             }
-//             if(p!=null)
-//             p.textContent = p.textContent + transcript
-//     }
-//     function stopEdit(){
- 
-//         recognition.addEventListener('end',()=>{
-//             console.log("listener removed")
-//          })
-//          recognition.removeEventListener('result',editMode)
-//          recognition.stop()
-//          console.log("edit mode stopped")
-        
-//     }
-
-

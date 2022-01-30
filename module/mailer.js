@@ -1,18 +1,19 @@
 const nodemailer = require('nodemailer');
-var counter = function(data) {
+
+const counter = function(data) {
     console.log("counter function from app")
     
-let transporter = nodemailer.createTransport({
+const transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
-        user:  'ashishk8581@gmail.com', 
-        pass: 'gteagdjwempfuhyb'
+        user: process.env.ADMIN_MAIL, 
+        pass: process.env.MAIL_PASS
     }
 });
 
 let mailOptions = {
-    from: 'ashishk8581@gmail.com',
-    to: 'ashishk8581@gmail.com',
+    from: process.env.ADMIN_MAIL,
+    to: process.env.ADMIN_MAIL,
     subject: 'Nodemailer - Test',
     text: data,
     // attachments: [
