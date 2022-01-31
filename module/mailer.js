@@ -1,8 +1,8 @@
 const nodemailer = require('nodemailer');
 
-const counter = function(data) {
-    console.log("counter function from app")
-    
+const mailer = (url, email) => {
+//SMTP Credentials
+console.log("sent mail")
 const transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
@@ -11,23 +11,23 @@ const transporter = nodemailer.createTransport({
     }
 });
 
-let mailOptions = {
+//Mail Body
+const mailOptions = {
     from: process.env.ADMIN_MAIL,
-    to: process.env.ADMIN_MAIL,
+    to: email,
     subject: 'Nodemailer - Test',
-    text: data,
-    // attachments: [
-    //     { filename: '2019UGEE092(1).pdf', path: '../../Downloads/2019UGEE092(1).pdf' }
-    // ]
+    text: url,
 };
 
+//Sending Mail
 transporter.sendMail(mailOptions, (err, data) => {
     if (err) {
         console.log(err);
-        console.log('Error occurs')
+        console.log('Cannot send Mail')
     }
     else
-    console.log('Email sent!!!')
+    console.log('Email sent!!!', email)
 })
 }
-module.exports = counter
+
+module.exports = mailer

@@ -4,7 +4,6 @@ const app = express();
 const path = require("path");
 const cors = require("cors");
 const PORT = 3000 || process.env.PORT;
-const fs = require("fs");
 const presRoutes = require("./routes/routes")
 
 //middlewares

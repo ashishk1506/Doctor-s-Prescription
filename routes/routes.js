@@ -13,8 +13,5 @@ router.use("/pdfFromHTML/:id", userController.generatePdf);
 
 //loading panelist  
 router.get("/panelist/:dName", userController.panelists);
-  
-//downloading generated pdf
-router.get("/pdf/:name", userController.download);
 
 module.exports = router

@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <mate charest="utf-8" />
+    <title>prescription</title>
+  </head>
+  <body>
+    
+    <ul>
+      {{#each users}}
+      <h1> {{this.name}}</h1>
+      <h3>symptoms </h3> <li> {{this.symptoms}}</li>
+      <h3>diagnosis </h3> <li> {{this.diagnosis}}</li>
+       <h3>prescription</h3> <li> {{this.prescription}}</li>
+      <h3>advice</h3> <li> {{this.advice}}</li>
+      <br />
+      {{/each}} 
+      
+    </ul>
+  </body>
+</html>
