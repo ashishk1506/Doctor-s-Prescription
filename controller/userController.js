@@ -97,7 +97,7 @@ module.exports.generatePdf = async function (req, res) {
     "://" +
     req.headers.host +
     "/" +
-    "public/pdf" +
+    "pdf" +
     "/" +
     id;
   console.log("URL", url);
@@ -167,3 +167,16 @@ module.exports.panelists = (req, res) => {
     return res.status(502).send("Database error")
   }
 };
+
+
+module.exports.downloadLink = (req,res)=>{
+  const id = req.params.id
+  res.download(path.join(__dirname,`../public/pdf/${id}.pdf`), function (err) {
+    if (err) {
+        console.log("Error");
+        console.log(err);
+    } else {
+        console.log("Success");
+    }    
+})
+}

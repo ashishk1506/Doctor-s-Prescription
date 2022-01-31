@@ -21,5 +21,5 @@ app.use("/",presRoutes)
 
 //listening to server
 app.listen(PORT,() => {
-  console.log("listening to port 3000");
+  console.log("listening to port", PORT);
 });
