@@ -87,7 +87,13 @@
 
     </div>
 <script>
-
+    const date = new Date();
+    var ISToffSet = 330; //IST is 5:30; i.e. 60*5+30 = 330 in minutes 
+    offset= ISToffSet*60*1000;
+    var ISTTime = new Date(date.getTime()+offset);
+    console.log("IST",ISTTime)
+    var UTCTime = new Date(date.getTime());
+    console.log("Universal",UTCTime)
 </script>
 </body>
 </html>
