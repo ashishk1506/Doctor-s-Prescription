@@ -1,8 +1,12 @@
 const nodemailer = require('nodemailer');
 
-const mailer = (url, email) => {
+const mailer = (url, data ) => {
+
+if(data == undefined || data.pEmail == ""){
+    return
+}
+console.log(data)
 //SMTP Credentials
-console.log("sent mail")
 const transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
@@ -14,9 +18,14 @@ const transporter = nodemailer.createTransport({
 //Mail Body
 const mailOptions = {
     from: process.env.ADMIN_MAIL,
-    to: email,
-    subject: 'Nodemailer - Test',
-    text: url,
+    to: data.pEmail,
+    subject: 'Doctor Prescription',
+    text: `Dear ${data.pName},
+    Please find the link for prescription\n
+    ${url}\n
+    Praying for Good Health\n
+    ${data.dName}\n
+`,
 };
 
 //Sending Mail

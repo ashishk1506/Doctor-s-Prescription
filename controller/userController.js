@@ -3,13 +3,15 @@ const mailer = require("../module/mailer");
 const fs = require("fs");
 const path = require("path");
 const pdf = require("pdf-creator-node");
+const options = require("../module/pdfTemplate");
+
+//Binding the pdf data
+const html = fs.readFileSync("template/template.html", "utf8");
 
 module.exports.index = (req, res) => {
   //Loading index.html
   res.render("index");
 };
-
-
 
 module.exports.prescription = (req, res) => {
   data = req.body;
@@ -18,10 +20,10 @@ module.exports.prescription = (req, res) => {
     dbConn.query(
       "INSERT INTO patient (pName,pNumber,pEmail,dName,link) VALUES (?,?,?,?,?)",
       [
-        data.patient_name,
+        String(data.patient_name),
         parseInt(data.patient_phone),
-        data.patient_email,
-        data.doctor_name,
+        String(data.patient_email),
+        String(data.doctor_name),
         "",
       ],
       (err, result) => {
@@ -32,13 +34,11 @@ module.exports.prescription = (req, res) => {
       }
     );
   } catch (e) {
-    return res.status(502).send("Data cannot be uploaded")
+    return res.status(502).send("Data cannot be uploaded");
   }
   //Loading prescription.html
   res.render("prescription", { data });
 };
-
-
 
 module.exports.generatePdf = async function (req, res) {
   const id = req.params.id;
@@ -52,55 +52,80 @@ module.exports.generatePdf = async function (req, res) {
       advice: req.body.advice,
     },
   ];
-  //Binding the pdf data
-  const html = fs.readFileSync("template/template.html", "utf8");
-  const options = {
-    format: "A3",
-    orientation: "portrait",
-    border: "10mm",
-    header: {
-      height: "45mm",
-      contents: '<div style="text-align: center;">Doctor Prescription</div>',
-    },
-    footer: {
-      height: "28mm",
-      contents: {
-        first: "Cover page",
-        default:
-          '<span style="color: #444;">{{page}}</span>/<span>{{pages}}</span>', // fallback value
-        last: "Last Page",
-      },
-    },
-  };
-  //Creating pdf
+
   //Set pdf path in public directory
+  const downloadPath = path.join(__dirname, `../public/pdf/${id}.pdf`);
   const document = {
     html: html,
     data: {
       users: users,
     },
-    path: path.join(__dirname, `../public/pdf/${id}.pdf`),
+    path: downloadPath,
     type: "",
   };
   await pdf
     .create(document, options)
     .then((res) => {
-      console.log(res);
+      //URL to pdf generated
+      const url =
+        req.protocol + "://" + req.headers.host + "/" + "pdf" + "/" + id;
+      updateLink(url, id);
+      return url;
+    })
+    .then((url) => {
+      sendMail(url, id);
+      return;
     })
     .catch((error) => {
-      return res.status(400).send("Pdf generation failed")
+      return res.status(400).send("Pdf generation failed");
     });
+  //Sending pdf to user (download)
+  res.download(downloadPath, function (err) {
+    if (err) {
+      console.log("Download Error");
+      console.log(err);
+      return res.status(404).send("pdf not found");
+    } else {
+      console.log("Download Success");
+    }
+  });
+};
 
-  //URL to pdf generated
-  const url =
-    req.protocol +
-    "://" +
-    req.headers.host +
-    "/" +
-    "pdf" +
-    "/" +
-    id;
-  console.log("URL", url);
+module.exports.panelists = (req, res) => {
+  try {
+    //SQL query to fetch all patients belonging to the doctor
+    dbConn.query(
+      `SELECT * FROM patient WHERE dName = '${req.params.dName}'`,
+      (err, result) => {
+        if (err) console.log(err);
+        else {
+          console.log("done", result);
+          //Loading panelist.html
+          res.render("panelist", { result });
+        }
+      }
+    );
+  } catch (e) {
+    return res.status(502).send("Database error");
+  }
+};
+
+module.exports.downloadLink = (req, res) => {
+  const id = req.params.id;
+  res.download(path.join(__dirname, `../public/pdf/${id}.pdf`), function (err) {
+    if (err) {
+      console.log("Error");
+      console.log(err);
+    } else {
+      console.log("Success");
+    }
+  });
+};
+
+
+//helper function
+const updateLink = (url, id) => {
+  console.log(url);
   try {
     //SQL Query for setting URL to Pdf
     dbConn.query(
@@ -113,70 +138,24 @@ module.exports.generatePdf = async function (req, res) {
       }
     );
   } catch (e) {
-    return res.status(502).send("Database error")
+    return res.status(502).send("Database error");
   }
+};
+
+const sendMail = (url, id) => {
   try {
     //SQL Query for getting Email of patient
     dbConn.query(
-      `SELECT pEmail from patient WHERE pNumber = ${id} ORDER BY id DESC`,
+      `SELECT pEmail, dName, pName from patient WHERE pNumber = ${id} ORDER BY id DESC`,
       (err, result) => {
         if (err) console.log(err);
         else {
           //Setting up Mail Service
-          mailer(url.toString(),result[0].pEmail);
+          mailer(url.toString(), result[0]);
         }
       }
     );
   } catch (e) {
-    return res.status(502).send("Database error")
-  }
-
-  //Sending pdf to user (download)
-  const downloadPath = path.join(__dirname, `../public/pdf/${id}.pdf`);
-  console.log("Download Path", downloadPath)
-  res.download(
-    downloadPath,
-    function (err) {
-      if (err) {
-        console.log("Download Error");
-        console.log(err);
-        return res.status(404).send("pdf not found")
-      } else {
-        console.log("Download Success");
-      }
-    }
-  );
-};
-
-module.exports.panelists = (req, res) => {
-  try {
-    //SQL query to fetch all patients belonging to the doctor
-    dbConn.query(
-      `SELECT * FROM patient WHERE dName = '${req.params.dName}'`,
-      (err, result) => {
-        if (err) 
-        console.log(err)
-        else {
-          console.log("done", result);
-          //Loading panelist.html
-          res.render("panelist", { result });
-        }
-      }
-    );
-  } catch (e) {
-    return res.status(502).send("Database error")
+    return res.status(502).send("Database error");
   }
 };
-
-
-module.exports.downloadLink = (req,res)=>{
-  const id = req.params.id
-  res.download(path.join(__dirname,`../public/pdf/${id}.pdf`), function (err) {
-    if (err) {
-        console.log("Error");
-        console.log(err);
-    } else {
-        console.log("Success");
-    }    
-})
-}
