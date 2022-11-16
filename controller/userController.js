@@ -6,7 +6,7 @@ const pdf = require("pdf-creator-node");
 const options = require("../module/pdfTemplate");
 
 //Binding the pdf data
-const html = fs.readFileSync("template/template.html", "utf8");
+const html = fs.readFileSync(path.join(__dirname,'../public/template/template.html'), "utf8");
 
 module.exports.index = (req, res) => {
   //Loading index.html
@@ -43,8 +43,15 @@ module.exports.prescription = (req, res) => {
 module.exports.generatePdf = async function (req, res) {
   const id = req.params.id;
   //Fetching prescription data from req object
+  let today = new Date()
+  let date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate()
+  let time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds()
+  
   const users = [
-    {
+    { 
+      date:date,
+      time:time,
+      docName: req.body.docName,
       name: req.body.name,
       symptoms: req.body.symptoms,
       diagnosis: req.body.diagnosis,
@@ -69,11 +76,12 @@ module.exports.generatePdf = async function (req, res) {
       //URL to pdf generated
       const url =
         req.protocol + "://" + req.headers.host + "/" + "pdf" + "/" + id;
+      console.log(url)
       updateLink(url, id);
       return url;
     })
     .then((url) => {
-      sendMail(url, id);
+      //sendMail(url, id);
       return;
     })
     .catch((error) => {
