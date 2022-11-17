@@ -81,7 +81,7 @@ module.exports.generatePdf = async function (req, res) {
       return url;
     })
     .then((url) => {
-      //sendMail(url, id);
+      sendMail(url, id);
       return;
     })
     .catch((error) => {
