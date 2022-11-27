@@ -1,0 +1,4 @@
+{
+    "appService.defaultWebAppToDeploy": "/subscriptions/847fed70-ce0b-4f0b-8eab-dd5d25a99ecd/AppServices/subscriptions/847fed70-ce0b-4f0b-8eab-dd5d25a99ecd/resourceGroups/PROJECTDB/providers/Microsoft.Web/sites/NodeProjDB",
+    "appService.deploySubpath": "."
+}

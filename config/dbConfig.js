@@ -15,6 +15,7 @@ if(process.env.SSL == 1)
     port : process.env.DB_PORT,
     ssl:{ca:fs.readFileSync(__dirname+'/ssl/DigiCertGlobalRootCA.crt.pem'),rejectUnauthorized: true}
  })
+ console.log("SSL ENABLED")
 }else if(process.env.SSL == 0){
   dbConn = mysql.createPool({
     host : process.env.DB_HOST,
@@ -23,6 +24,7 @@ if(process.env.SSL == 1)
     database : process.env.DB_DATABASE,
     port : process.env.DB_PORT
   })
+  console.log("SSL DISABLED")
 }
 
 //creating database pool connection
