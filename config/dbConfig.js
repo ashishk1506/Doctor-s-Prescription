@@ -8,6 +8,9 @@ let dbConn;
 if(process.env.SSL == 1)
 {
   dbConn = mysql.createPool({
+    connectTimeout  : 60 * 1000,
+    acquireTimeout  : 60 * 1000,
+    timeout         : 60 * 1000,
     host : process.env.DB_HOST_SSL,
     user : process.env.DB_USER_SSL,
     password : process.env.DB_PASS_SSL,
