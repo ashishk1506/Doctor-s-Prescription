@@ -7,7 +7,7 @@ const { url } = require("inspector");
 
 module.exports.uploadBlob = async (readStream,id) => {
 
-  const connString = "DefaultEndpointsProtocol=https;AccountName=projblobstorage;AccountKey=Gj9f9MsUGOr/YN26eqSfUl/WS6VK35tt7mnZN0gaCcMYiCzVpi1ykx+PCjf9JhAUgpgAtKmLRMkp+AStEI5YSQ==;EndpointSuffix=core.windows.net";
+  const connString = "";
   if (!connString) throw Error('Azure Storage Connection string not found');
   const container = "pdfstore";
   const client = BlobServiceClient.fromConnectionString(connString);
