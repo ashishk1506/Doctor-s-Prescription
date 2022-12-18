@@ -1,12 +1,17 @@
 const dbConn = require("../config/dbConfig");
-const mailer = require("../module/mailer");
 const fs = require("fs");
 const path = require("path");
 const pdf = require("pdf-creator-node");
 const options = require("../module/pdfTemplate");
+const { url } = require("inspector");
+const helperFunc = require("./helperFunc.js");
+const { Transform } = require('stream');
+const { BlobServiceClient } = require('@azure/storage-blob');
 
 //Binding the pdf data
-const html = fs.readFileSync(path.join(__dirname,'../public/template/template.html'), "utf8");
+const html = fs.readFileSync(path.join(__dirname, '../public/template/template.html'), "utf8");
+
+let data = "";
 
 module.exports.index = (req, res) => {
   //Loading index.html
@@ -44,22 +49,23 @@ module.exports.generatePdf = async function (req, res) {
   const id = req.params.id;
   //Fetching prescription data from req object
   let today = new Date()
-  let date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate()
-  let time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds()
-  
-  const users = [
-    { 
-      date:date,
-      time:time,
-      docName: req.body.docName,
-      name: req.body.name,
-      symptoms: req.body.symptoms,
-      diagnosis: req.body.diagnosis,
-      prescription: req.body.prescription,
-      advice: req.body.advice,
-    },
-  ];
+  // let date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate()
+  // let time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds()
+  const options = { year: 'numeric', month: 'long', day: 'numeric' };
 
+  const users = [
+    {
+      date: today.toLocaleDateString("en-US", options),
+      time: today.toLocaleTimeString(),
+      docName: data != "" && data.doctor_name != undefined ? data.doctor_name : "",
+      name: data != "" && data.patient_name != undefined ? data.patient_name : "",
+      symptoms: req.body.symptoms != undefined ? req.body.symptoms.split("\n") : "",
+      diagnosis: req.body.diagnosis != undefined ? req.body.diagnosis.split("\n") : "",
+      prescription: req.body.prescription != undefined ? req.body.prescription.split("\n") : "",
+      advice: req.body.advice != undefined ? req.body.advice.split("\n") : "",
+    }
+  ];
+  console.log("RECIEVED DATA", users);
   //Set pdf path in public directory
   const downloadPath = path.join(__dirname, `../public/pdf/${id}.pdf`);
   const document = {
@@ -68,35 +74,46 @@ module.exports.generatePdf = async function (req, res) {
       users: users,
     },
     path: downloadPath,
-    type: "",
+    type: "stream",
   };
-  await pdf
-    .create(document, options)
-    .then((res) => {
-      //URL to pdf generated
-      const url =
-        req.protocol + "://" + req.headers.host + "/" + "pdf" + "/" + id;
-      console.log(url)
-      updateLink(url, id);
-      return url;
-    })
-    .then((url) => {
-      sendMail(url, id);
-      return;
-    })
-    .catch((error) => {
-      return res.status(400).send("Pdf generation failed");
-    });
+  let readStream = await pdf.create(document, options)
+  await helperFunc.uploadBlob(readStream,id)
+  //const getTagsResponse = await blockBlobClient.getTags();
+  // console.log("RESULT AFTER UPLOAD", resp);
+  const downloadUrl = `https://projblobstorage.blob.core.windows.net/pdfstore/${id}.pdf`;
+  await helperFunc.updateLink(downloadUrl,id)
+  await helperFunc.sendMail(downloadUrl,id)
+  //await createBlobFromReadStream(containerClient, `${container}.pdf`, readStream, uploadOptions);
+  // .then((res) => {
+  //   //URL to pdf generated
+  //   console.log("after pdf output",res);
+  //   const url = req.protocol + "://" + req.headers.host + "/" + "pdf" + "/" + id;
+  //   console.log(url)
+  //   helperFunc.updateLink(url, id);
+  //   return url;
+  // })
+  // .then((url) => {
+  //   helperFunc.sendMail(url,id);
+  //   return;
+  // })
+  // .catch((error) => {
+  //   return res.status(400).send("Pdf generation failed");
+  // });
   //Sending pdf to user (download)
-  res.download(downloadPath, function (err) {
-    if (err) {
-      console.log("Download Error");
-      console.log(err);
-      return res.status(404).send("pdf not found");
-    } else {
-      console.log("Download Success");
-    }
-  });
+  
+  //console.log(`download of ${blobName} success`);
+  // res.download("https://projblobstorage.blob.core.windows.net/pdfstore/ashish.pdf", function (err) {
+  //   if (err) {
+  //     console.log("Download Error");
+  //     console.log(err);
+  //     return res.status(404).send("pdf not found");
+  //   } else {
+  //     console.log("Download Success");
+  //   }
+  // });
+  res.status(200).send({
+    url: downloadUrl
+  })
 };
 
 module.exports.panelists = (req, res) => {
@@ -131,39 +148,4 @@ module.exports.downloadLink = (req, res) => {
 };
 
 
-//helper function
-const updateLink = (url, id) => {
-  console.log(url);
-  try {
-    //SQL Query for setting URL to Pdf
-    dbConn.query(
-      `UPDATE patient SET link = '${url}' WHERE pNumber = ${id}`,
-      (err, result) => {
-        if (err) console.log(err);
-        else {
-          console.log("Link to Pdf Updated");
-        }
-      }
-    );
-  } catch (e) {
-    return res.status(502).send("Database error");
-  }
-};
 
-const sendMail = (url, id) => {
-  try {
-    //SQL Query for getting Email of patient
-    dbConn.query(
-      `SELECT pEmail, dName, pName from patient WHERE pNumber = ${id} ORDER BY id DESC`,
-      (err, result) => {
-        if (err) console.log(err);
-        else {
-          //Setting up Mail Service
-          mailer(url.toString(), result[0]);
-        }
-      }
-    );
-  } catch (e) {
-    return res.status(502).send("Database error");
-  }
-};

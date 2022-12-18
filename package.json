@@ -18,6 +18,8 @@
   },
   "homepage": "https://github.com/ashishk1506/Hackathon_ojass#readme",
   "dependencies": {
+    "@azure/storage-blob": "^12.12.0",
+    "azure-storage": "^2.10.7",
     "cors": "^2.8.5",
     "dotenv": "^9.0.0",
     "ejs": "^3.1.6",

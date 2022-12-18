@@ -7,9 +7,11 @@ let label
 let n = false
 
 //display time
+
+const options = { year: 'numeric', month: 'long', day: 'numeric' };
 let today = new Date()
-let date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate()
-let time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds()
+let date = today.toLocaleDateString("en-US", options)
+let time = today.toLocaleTimeString()
 let dateTime = date+' '+time;
 document.querySelector('.time').textContent = dateTime
 

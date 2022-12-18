@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+   /* ROOT FONT STYLES */
+
+* {
+    padding: 0;
+    margin: 0 auto;
+    box-sizing: border-box;
+    width: 100%;
+    
+}
+
+
+
+/* ==== GRID SYSTEM ==== */
+.container {
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.row {
+  position: relative;
+  width: 100%;
+}
+
+.row [class^="col"] {
+  float: left;
+ }
+
+.row::after {
+    content: "";
+    clear: both;
+    display: block;
+}
+
+.col-1 {width: 8.33%;}
+.col-2 {width: 16.66%;}
+.col-3 {width: 25%;}
+.col-4 {width: 33.33%;}
+.col-5 {width: 41.66%;}
+.col-6 {width: 50%;}
+.col-7 {width: 58.33%;}
+.col-8 {width: 66.66%;}
+.col-9 {width: 75%;}
+.col-10 {width: 83.33%;}
+.col-11 {width: 91.66%;}
+.col-12 {width: 100%;}
+
+/* Custom */
+
+  .container{
+    min-height:84px;
+    border:1px solid black;
+    max-width:90%;
+    margin: 0 auto;
+    margin-top:150px;
+  }
+  header{
+    min-height:83px;
+    border-bottom:1px solid black;
+    
+  }
+
+.doc-details{
+    margin-top:5px;
+  margin-left:15px;
+  
+}
+  
+.clinic-details{
+  margin-top:5px;
+  margin-left:15px;
+}
+  .doc-name{
+    font-weight:bold;
+    margin-bottom:5px;
+    font-size:30px
+  }
+  .doc-meta{
+    font-size:20px;
+  }
+.datetime{
+  font-size:20px;
+  margin-top:5px;
+
+}
+
+.row.title{
+ font-weight:bold;
+  padding-left:10px;
+  margin-top:10px;
+  margin-bottom:10px;
+}
+
+.prescription{
+  min-height:380px;
+  margin-bottom:10px;
+}
+table{
+  text-align:left;
+  width:90%;
+  min-height:25px;
+}
+table th{
+  font-size:20px;
+  font-weight:bold;
+}
+
+table tr{
+  margin-top:20px;
+}
+table td{
+  font-size:20px;
+  
+}
+
+.instruction{
+  font-size:20px;
+}
+  </style>
+</head>
+
+<body>
+  {{#each users}}
+  <div class="container">
+    <header class="row">
+      <div class="col-10">
+        <div class="doc-details">
+          <p class="doc-name">Dr. {{this.docName}}</p>
+        </div>
+
+        <div class="clinic-details">
+          <p class="doc-meta">Clinic Name</p>
+          <p class="doc-meta">#Digital Pharmacy</p>
+        </div>
+
+      </div>
+      <div class="col-2 datetime">
+        <p>Date: {{this.date}}</p>
+        <p>Time: {{this.time}}</p>
+      </div>
+    </header>
+    <div class="prescription">
+      <p style="margin-left:15px;font-size:30px;font-weight:bold;">Rx Name of patient, {{this.name}}</p>
+
+      <table>
+        <br>
+        <thead>
+          <th>Symptoms</th>
+        </thead>
+        <tr>
+          <td>{{this.symptoms}}</td>
+        </tr>
+        <br>
+        <br>
+        <thead>
+          <th>Diagnosis</th>
+        </thead>
+        <tr>
+          <td>{{this.diagnosis}}</td>
+        </tr>
+        <br>
+        <br>
+        <thead>
+          <th>Prescription</th>
+        </thead>
+        <tr>
+          <td>{{this.prescription}}</td>
+        </tr>
+        <br>
+        <br>
+        <thead>
+          <th>Advice</th>
+        </thead>
+        <tr>
+          <td>{{this.advice}}</td>
+        </tr>
+        <br>
+      </table>
+
+    </div>
+
+    <p style="font-size:9px;text-align:right;padding-bottom:15px;padding-right:25px;">Dr. {{this.docName}}</p>
+    <p style="font-size:6px;text-align:center;padding-bottom:20px;">This is a digitally generated Prescription</p>
+  </div>
+  {{/each}}
+  <!-- <ul>
+      {{#each users}}
+      <h1> {{this.name}}</h1>
+      <h3>symptoms </h3> <li> {{this.symptoms}}</li>
+      <h3>diagnosis </h3> <li> {{this.diagnosis}}</li>
+       <h3>prescription</h3> <li> {{this.prescription}}</li>
+      <h3>advice</h3> <li> {{this.advice}}</li>
+      <br />
+      {{/each}} 
+      
+    </ul> -->
+</body>
+
+</html>

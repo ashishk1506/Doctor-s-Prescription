@@ -1,10 +1,10 @@
 
 module.exports.options = {
-        format: "A3",
+        format: "A4",
         orientation: "portrait",
         border: "10mm",
         header: {
-          height: "45mm",
+          height: "900mm",
           contents: '<div style="text-align: center;">Doctor Prescription</div>',
         },
         footer: {

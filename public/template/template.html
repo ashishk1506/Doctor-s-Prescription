@@ -1,208 +1,255 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
-<html lang="en">
 
 <head>
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="utf-8">
+  <title>Doctor's Prescription</title>
+
   <style>
-   /* ROOT FONT STYLES */
+    .invoice-box {
 
-* {
-    padding: 0;
-    margin: 0 auto;
-    box-sizing: border-box;
-    width: 100%;
-    
-}
+      margin-top: 200px;
+      max-width: 900px;
+      margin: auto;
+      padding: 30px;
+      border: 1px solid #eee;
+      box-shadow: 0 0 10px rgba(0, 0, 0, .15);
+      font-size: 24px;
+      line-height: 30px;
+      font-family: 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif;
+      color: #555;
+    }
 
+    .invoice-box table {
+      width: 100%;
+      line-height: inherit;
+      text-align: left;
+    }
 
+    .invoice-box table td {
+      padding: 5px;
+      vertical-align: top;
+    }
 
-/* ==== GRID SYSTEM ==== */
-.container {
-  width: 100%;
-  margin-left: auto;
-  margin-right: auto;
-}
+    .invoice-box table tr td:nth-child(2) {
+      text-align: right;
+    }
 
-.row {
-  position: relative;
-  width: 100%;
-}
+    .invoice-box table tr.top table td {
+      padding-bottom: 30px;
+    }
 
-.row [class^="col"] {
-  float: left;
- }
+    .invoice-box table tr.top table td.title {
+      font-size: 60px;
+      line-height: 60px;
+      color: #333;
+    }
 
-.row::after {
-    content: "";
-    clear: both;
-    display: block;
-}
+    .invoice-box table tr.information table td {
+      padding-bottom: 40px;
+    }
 
-.col-1 {width: 8.33%;}
-.col-2 {width: 16.66%;}
-.col-3 {width: 25%;}
-.col-4 {width: 33.33%;}
-.col-5 {width: 41.66%;}
-.col-6 {width: 50%;}
-.col-7 {width: 58.33%;}
-.col-8 {width: 66.66%;}
-.col-9 {width: 75%;}
-.col-10 {width: 83.33%;}
-.col-11 {width: 91.66%;}
-.col-12 {width: 100%;}
+    .invoice-box table tr.heading td {
+      background: #eee;
+      border-bottom: 1px solid #ddd;
+      font-weight: bold;
+    }
 
-/* Custom */
+    .invoice-box table tr.details td {
+      padding-bottom: 30px;
+    }
 
-  .container{
-    min-height:84px;
-    border:1px solid black;
-    max-width:90%;
-    margin: 0 auto;
-    margin-top:150px;
-  }
-  header{
-    min-height:83px;
-    border-bottom:1px solid black;
-    
-  }
+    .invoice-box table tr.item td {
+      border-bottom: 1px solid #eee;
+    }
 
-.doc-details{
-    margin-top:5px;
-  margin-left:15px;
-  
-}
-  
-.clinic-details{
-  margin-top:5px;
-  margin-left:15px;
-}
-  .doc-name{
-    font-weight:bold;
-    margin-bottom:5px;
-    font-size:30px
-  }
-  .doc-meta{
-    font-size:20px;
-  }
-.datetime{
-  font-size:20px;
-  margin-top:5px;
+    .invoice-box table tr.item.last td {
+      border-bottom: none;
+    }
 
-}
+    .invoice-box table tr.total td:nth-child(2) {
+      border-top: 2px solid #eee;
+      font-weight: bold;
+    }
 
-.row.title{
- font-weight:bold;
-  padding-left:10px;
-  margin-top:10px;
-  margin-bottom:10px;
-}
+    @media only screen and (max-width: 600px) {
+      .invoice-box table tr.top table td {
+        width: 100%;
+        display: block;
+        text-align: center;
+      }
 
-.prescription{
-  min-height:380px;
-  margin-bottom:10px;
-}
-table{
-  text-align:left;
-  width:90%;
-  min-height:25px;
-}
-table th{
-  font-size:20px;
-  font-weight:bold;
-}
+      .invoice-box table tr.information table td {
+        width: 100%;
+        display: block;
+        text-align: center;
+      }
+    }
 
-table tr{
-  margin-top:20px;
-}
-table td{
-  font-size:20px;
-  
-}
+    /** RTL **/
+    .rtl {
+      direction: rtl;
+      font-family: Tahoma, 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif;
+    }
 
-.instruction{
-  font-size:20px;
-}
+    .rtl table {
+      text-align: right;
+    }
+
+    .rtl table tr td:nth-child(2) {
+      text-align: left;
+    }
   </style>
 </head>
 
 <body>
   {{#each users}}
-  <div class="container">
-    <header class="row">
-      <div class="col-10">
-        <div class="doc-details">
-          <p class="doc-name">Dr. {{this.docName}}</p>
-        </div>
+  <div class="invoice-box">
+    <table cellpadding="0" cellspacing="0">
+      <tr class="top">
+        <td colspan="2">
+          <table>
+            <tr>
+              <td class="title">
+                <img src="https://wallpapercave.com/wp/wp8593840.jpg" style="width:100%; max-width:300px;">
+              </td>
 
-        <div class="clinic-details">
-          <p class="doc-meta">Clinic Name</p>
-          <p class="doc-meta">#Digital Pharmacy</p>
-        </div>
+              <td>
+                Doctor's Prescription<br>
+                Created: {{this.date}}<br>
+                At: {{this.time}}
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
 
-      </div>
-      <div class="col-2 datetime">
-        <p>Date: {{this.date}}</p>
-        <p>Time: {{this.time}}</p>
-      </div>
-    </header>
-    <div class="prescription">
-      <p style="margin-left:15px;font-size:30px;font-weight:bold;">Rx Name of patient, {{this.name}}</p>
+      <tr class="information">
+        <td colspan="2">
+          <table>
+            <tr>
+              <td>
+                NIT Jamshedpur Dispensary<br>
+                831014, Jamshedpur<br>
+              </td>
 
-      <table>
-        <br>
-        <thead>
-          <th>Symptoms</th>
-        </thead>
-        <tr>
-          <td>{{this.symptoms}}</td>
-        </tr>
-        <br>
-        <br>
-        <thead>
-          <th>Diagnosis</th>
-        </thead>
-        <tr>
-          <td>{{this.diagnosis}}</td>
-        </tr>
-        <br>
-        <br>
-        <thead>
-          <th>Prescription</th>
-        </thead>
-        <tr>
-          <td>{{this.prescription}}</td>
-        </tr>
-        <br>
-        <br>
-        <thead>
-          <th>Advice</th>
-        </thead>
-        <tr>
-          <td>{{this.advice}}</td>
-        </tr>
-        <br>
-      </table>
+              <td>
+                Dr. {{this.docName}}<br>
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
 
-    </div>
+      <tr class="heading">
+        <td>
+          PATIENT NAME
+        </td>
+        
+        <td>
+          {{this.name}}
+        </td>
+      </tr>
 
-    <p style="font-size:9px;text-align:right;padding-bottom:15px;padding-right:25px;">Dr. {{this.docName}}</p>
-    <p style="font-size:6px;text-align:center;padding-bottom:20px;">This is a digitally generated Prescription</p>
+      <tr class="details">
+        <td></td>
+      </tr>
+      <tr class="details">
+        <td></td>
+      </tr>
+
+      <tr class="heading">
+        <td>
+          Symptoms
+        </td>
+        <td>
+        </td>
+      </tr>
+     
+      <tr class="item">
+        <td>
+          <ul>
+            {{#each this.symptoms}}
+            <li>{{this}}</li>
+            {{/each}}
+          </ul>
+        </td>
+      </tr>
+      
+
+      <tr class="details">
+        <td></td>
+      </tr>
+
+      <tr class="heading">
+        <td>
+          Diagnosis
+        </td>
+        <td>
+        </td>
+      </tr>
+      
+      <tr class="item">
+        <td>
+          <ul>
+            {{#each this.diagnosis}}
+            <li>{{this}}</li>
+            {{/each}}
+          </ul>
+        </td>
+      </tr>
+
+      <tr class="details">
+        <td></td>
+      </tr>
+
+      <tr class="heading">
+        <td>
+          Prescription
+        </td>
+        <td>
+        </td>
+      </tr>
+      
+      <tr class="item">
+        <td>
+          <ul>
+            {{#each this.prescription}}
+            <li>{{this}}</li>
+            {{/each}}
+          </ul>
+        </td>
+      </tr>
+
+      <tr class="details">
+        <td></td>
+      </tr>
+
+      <tr class="heading">
+        <td>
+          Advice
+        </td>
+        <td>
+        </td>
+      </tr>
+      
+      <tr class="item">
+        <td>
+          <ul>
+            {{#each this.advice}}
+            <li>{{this}}</li>
+            {{/each}}
+          </ul>
+        </td>
+      </tr>
+
+      <tr class="details">
+        <td></td>
+      </tr>
+
+    </table>
   </div>
   {{/each}}
-  <!-- <ul>
-      {{#each users}}
-      <h1> {{this.name}}</h1>
-      <h3>symptoms </h3> <li> {{this.symptoms}}</li>
-      <h3>diagnosis </h3> <li> {{this.diagnosis}}</li>
-       <h3>prescription</h3> <li> {{this.prescription}}</li>
-      <h3>advice</h3> <li> {{this.advice}}</li>
-      <br />
-      {{/each}} 
-      
-    </ul> -->
 </body>
 
 </html>
