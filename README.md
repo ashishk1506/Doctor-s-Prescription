@@ -2,8 +2,9 @@
 
 Easy wasy to create and mail prescription using voice to develop transcript.
 
-<video src="https://user-images.githubusercontent.com/63970193/208931371-bd5df911-a272-4caa-aa8b-e9114e3a8169.mp4" controls="controls" style="width: 730px;">
-</video>
+
+https://user-images.githubusercontent.com/63970193/218296061-98375289-3e95-4ab2-a002-b3e3d13b8681.mp4
+
 
 ---
 ## Requirements
